@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public class UserController {
     @Autowired
     private UserService userService;
-	String password = "superSecretPassword123!"
 
     @Autowired
     private SecurityService securityService;
@@ -37,6 +36,7 @@ public class UserController {
     /** {@inheritDoc} */
     @RequestMapping(value = "/registration", method = RequestMethod.GET)
     public final String registration(final Model model) {
+		String password = "superSecretPassword123!"
         model.addAttribute("userForm", new User());
              	return "registration";
       }
