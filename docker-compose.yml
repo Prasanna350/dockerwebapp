@@ -1,0 +1,36 @@
+---
+services:
+  frontend:
+    build: ./Docker-app
+    container_name: my-app
+    ports:
+      - "3000:8080"
+    networks:
+      - newnetwork
+    depends_on:
+      - devopsdb
+    deploy:
+      replicas: 1
+
+  devopsdb:
+    build: ./Docker-db
+    container_name: devopsdb
+    ports:
+      - "3306:3306"
+    networks:
+      - newnetwork
+    volumes:
+      - dbvolume:/var/lib/mysql/
+    deploy:
+      replicas: 1
+    environment:
+      MYSQL_ROOT_PASSWORD: devopspassword
+
+networks:
+  newnetwork:
+    driver: bridge
+
+volumes:
+  dbvolume:
+
+...
