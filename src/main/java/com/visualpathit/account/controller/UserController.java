@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public class UserController {
     @Autowired
     private UserService userService;
+	String password = "superSecretPassword123!"
 
     @Autowired
     private SecurityService securityService;
