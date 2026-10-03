@@ -36,7 +36,7 @@ public class UserController {
     /** {@inheritDoc} */
     @RequestMapping(value = "/registration", method = RequestMethod.GET)
     public final String registration(final Model model) {
-		String password = "superSecretPassword123!"
+		String password = "superSecretPassword123!";
         model.addAttribute("userForm", new User());
              	return "registration";
       }
