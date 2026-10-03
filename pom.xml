@@ -182,10 +182,15 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-war-plugin</artifactId>
 				<version>3.4.0</version> <!-- or latest stable -->
-				<configuration>
-                <argLine>--add-opens java.base/java.lang=ALL-UNNAMED</argLine>
-            </configuration>
 			</plugin>
+			<plugin>
+    <groupId>org.apache.maven.plugins</groupId>
+    <artifactId>maven-surefire-plugin</artifactId>
+    <version>3.6.0</version>
+    <configuration>
+        <argLine>--add-opens java.base/java.lang=ALL-UNNAMED @{argLine}</argLine>
+    </configuration>
+</plugin>
 		<!-- CODE COVERAGE -->
  		    <plugin>
  		        <groupId>org.jacoco</groupId>
