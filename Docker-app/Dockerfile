@@ -2,9 +2,7 @@ FROM tomcat:8-jre11
 
 RUN rm -rf /usr/local/tomcat/webapps/*
 
-RUN pwd
-
-COPY target/vprofile-v2.war /usr/local/tomcat/webapps/ROOT.war
+COPY /var/lib/jenkins/workspace/Docker-Compose-Practice/target/vprofile-v2.war /usr/local/tomcat/webapps/ROOT.war
 
 CMD ["catalina.sh", "run"]
 
