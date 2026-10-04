@@ -58,7 +58,6 @@ public class UserController {
     /** {@inheritDoc} */
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public final String login(final Model model, final String error, final String logout) {
-		String password = "super-strong-password";
         System.out.println("Model data"+model.toString());
     	if (error != null){
             model.addAttribute("error", "Your username and password is invalid.");
