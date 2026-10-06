@@ -10,7 +10,7 @@ services:
     depends_on:
       - devopsdb
     deploy:
-      replicas: 1
+      replicas: 2
 
   devopsdb:
     image: pashadeviprasanna943/dockerwebapp-db-image
@@ -22,7 +22,7 @@ services:
     volumes:
       - dbvolume:/var/lib/mysql/
     deploy:
-      replicas: 1
+      replicas: 2
     environment:
       MYSQL_ROOT_PASSWORD: devopspassword
 
