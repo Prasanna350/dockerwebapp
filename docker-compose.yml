@@ -9,7 +9,7 @@ services:
     depends_on:
       - devopsdb
     deploy:
-      replicas: 2
+      replicas: 1
 
   devopsdb:
     image: pashadeviprasanna943/dockerwebapp-db-image
