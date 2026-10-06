@@ -1,15 +1,19 @@
 pipeline {
-    agent any
+    agent {
+        node {
+            label 'Manager'
+        }
+    }
     tools {
         maven 'mymaven'
     }
     stages {
-        stage ("code") {
-            steps {
-                git 'https://github.com/Prasanna350/dockerwebapp.git'
+        stage ("Code") {
+            steps{
+                git 'https://github.com/Prasanna350/dockerwebapp.git'               
             }
         }
-        stage ("build") {
+        stage ("Build") {
             steps {
                 sh 'mvn clean install'
             }
@@ -17,13 +21,7 @@ pipeline {
         stage ("CQA") {
             steps {
                 withSonarQubeEnv('mysonar') {
-                    sh '''
-                        mvn clean verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
-                        -Dsonar.projectKey=myapp \
-                        -Dsonar.projectName='myapp' \
-                        -Dsonar.host.url=http://52.65.242.161:9000 \
-                        -Dsonar.token=sqp_9e7c31addfb26d1b3f29f8c88b03a70cf03fcfe2
-                    '''
+                    sh "mvn clean verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=myapp"
                 }
             }
         }
@@ -36,30 +34,45 @@ pipeline {
             steps {
                 script {
                     def pom = readMavenPom file: 'pom.xml'
-                    nexusArtifactUploader artifacts: [[artifactId: pom.artifactId, classifier: '', file: "target/${pom.artifactId}-${pom.version}.war", type: 'war']], credentialsId: 'nexus', groupId: pom.groupId, nexusUrl: '16.176.154.116:8081', nexusVersion: 'nexus3', protocol: 'http', repository: 'myapp', version: pom.version
+                    nexusArtifactUploader artifacts: [[artifactId: pom.artifactId, classifier: '', file: "target/${pom.artifactId}-${pom.version}.war", type: 'war']], credentialsId: 'nexus', groupId: pom.groupId, nexusUrl: '13.211.146.248:8081', nexusVersion: 'nexus3', protocol: 'http', repository: 'myapp', version: pom.version
                 }
             }
         }
-        stage ("Image-build") {
+        stage ("Images") {
             steps {
                 sh '''
-                    docker build -t app-image -f Docker-app/Dockerfile .
-                    docker build -t devopsdb Docker-db
+                    cp -r target Docker-app
+                    docker build -t app-image Docker-app
+                    docker build -t db-image Docker-db
                 '''
             }
         }
-        stage ("Trivy Scan") {
+        stage ("Image Scan") {
             steps {
                 sh '''
                     trivy image app-image
-                    trivy image devopsdb
+                    trivy image db-image
                 '''
             }
         }
-        stage ("Start Cont") {
+        stage ("Registry") {
+            steps {
+                script {
+                    withDockerRegistry(credentialsId: 'dockerhub') {
+                        sh '''
+                            docker tag app-image pashadeviprasanna943/dockerwebapp-app-image
+                            docker tag db-image pashadeviprasanna943/dockerwebapp-db-image
+                            docker push pashadeviprasanna943/dockerwebapp-db-image
+                            docker push pashadeviprasanna943/dockerwebapp-app-image
+                        '''
+                    }
+                }
+            }
+        }
+        stage ("Deploy") {
             steps {
                 sh '''
-                    docker-compose up -d
+                    docker stack deploy myapp --compose-file=docker-compose.yml
                 '''
             }
         }
