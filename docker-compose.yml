@@ -28,7 +28,7 @@ services:
 
 networks:
   newnetwork:
-    driver: bridge
+    driver: overlay
 
 volumes:
   dbvolume:
