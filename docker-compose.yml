@@ -1,7 +1,7 @@
 ---
 services:
   frontend:
-    image: app-image
+    image: pashadeviprasanna943/dockerwebapp-app-image
     container_name: my-app
     ports:
       - "3000:8080"
@@ -13,7 +13,7 @@ services:
       replicas: 1
 
   devopsdb:
-    image: devopsdb
+    image: pashadeviprasanna943/dockerwebapp-db-image
     container_name: devopsdb
     ports:
       - "3306:3306"
