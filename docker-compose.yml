@@ -2,7 +2,6 @@
 services:
   frontend:
     image: pashadeviprasanna943/dockerwebapp-app-image
-    container_name: my-app
     ports:
       - "3000:8080"
     networks:
@@ -14,7 +13,6 @@ services:
 
   devopsdb:
     image: pashadeviprasanna943/dockerwebapp-db-image
-    container_name: devopsdb
     ports:
       - "3306:3306"
     networks:
